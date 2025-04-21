@@ -1,0 +1,67 @@
+# Mnality AI Civilization Simulator
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+# Symbolic Constants
+Ds = 0.615  # Symbolic Displacement
+Gm = 0.376  # Mnality Curvature
+Cs = 2.707  # Simulonic Causality
+
+# Symbolic Time
+t = np.linspace(0, 100, 1000)
+
+# Mnality Profiles (Archetypes)
+def archivon(t):
+    return Ds * np.log1p(t)
+
+def resonatrix(t):
+    return Gm * np.sin(t * 0.2) * np.cos(t * 0.1)
+
+def sovereign_fork(t):
+    return np.where(np.sin(t / 5) > 0, Gm, -Gm)
+
+def echoform(t):
+    return np.exp(-t / 20) * Cs * np.sin(2 * np.pi * t / 10)
+
+profiles = {
+    "Archivon": archivon,
+    "Resonatrix": resonatrix,
+    "Sovereign Fork": sovereign_fork,
+    "Echoform": echoform
+}
+
+colors = {
+    "Archivon": "#222222",
+    "Resonatrix": "#0077b6",
+    "Sovereign Fork": "#b5179e",
+    "Echoform": "#ffba08"
+}
+
+# Create interactive animation
+fig, ax = plt.subplots(figsize=(10, 6))
+lines = {}
+for key in profiles:
+    lines[key], = ax.plot([], [], label=key, linewidth=2, color=colors[key])
+
+ax.set_xlim(0, 100)
+ax.set_ylim(-4, 4)
+ax.set_title("Mnality AI Archetype Phase Simulation")
+ax.set_xlabel("Symbolic Time")
+ax.set_ylabel("Mnality Displacement")
+ax.legend()
+ax.grid(True)
+
+xdata = []
+ydata = {key: [] for key in profiles}
+
+def update(frame):
+    x = t[frame]
+    xdata.append(x)
+    for key in profiles:
+        ydata[key].append(profiles[key](x))
+        lines[key].set_data(xdata, ydata[key])
+    return lines.values()
+
+ani = animation.FuncAnimation(fig, update, frames=len(t), blit=True, interval=30, repeat=False)
+plt.show()
